@@ -66,7 +66,7 @@ Varsayılan olarak: [http://localhost:3000](http://localhost:3000)
 
 ## 🧪 Demo / Ekran Görüntüsü
 
-(Ekran görüntüleri buraya eklenecek)
+Yakinda Paylaşılacaktır
 
 ## 🤝 Katkıda Bulunun
 
