@@ -36,12 +36,24 @@ YAKS CMS (Yusuf Akıllı Kolay Site), modern web siteleri için tasarlanmış, k
 
 ## ⚙️ Kurulum
 
+İlk baş 
+
 ```bash
-git clone https://github.com/kullaniciadi/yaks-cms.git
-cd yaks-cms
+git clone https://github.com/grandtheftcode/yaks-nodejs.git
+cd yaks-nodejs
+```
+yazarak proje çekilir
+
+knexfile.js düzenlenerek veritabanınızın bilgileri ile değiştirilir
+
+Daha Sonra
+
+```
 npm install
 npm start
 ```
+
+komutları kullanılarak proje aktif edilir
 
 Varsayılan olarak: [http://localhost:3000](http://localhost:3000)
 
