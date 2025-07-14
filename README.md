@@ -41,7 +41,7 @@ YAKS CMS (Yusuf Akıllı Kolay Site), modern web siteleri için tasarlanmış, k
 git clone https://github.com/grandtheftcode/yaks-nodejs.git
 cd yaks-nodejs
 ```
-yazarak proje çekilir
+yazarak proje çekilir ve proje içindeki sql mysql sunucusuna çekilir
 
 knexfile.js düzenlenerek veritabanınızın bilgileri ile değiştirilir
 
@@ -52,10 +52,18 @@ npm install
 npm start
 ```
 
+
+
 komutları kullanılarak proje aktif edilir
 
 Varsayılan olarak: [http://localhost:3000](http://localhost:3000)
+kullanıcı adı ve şifre
+```
 
+ilk@user.com
+RuhiÇenet123
+```
+kullanıcı yönetiminden yeni hesap oluşturup eski kullanıcıyı siliniz
 ## 🛤️ Yol Haritası
 
 - [x] Summernote destekli içerik düzenleme
