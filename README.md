@@ -80,4 +80,3 @@ MIT Lisansı
 ---
 
 Geliştirici: [Grand Theft Code (Yusuf CANSEVER)](https://github.com/grandtheftcode)  
-```
