@@ -1,0 +1,48 @@
+<!-- views/admin/pages/list.ejs -->
+
+<h2>Sabit Sayfaları Yönet</h2>
+<a href="/admin/pages/add" class="btn btn-success mb-3">Yeni Sayfa Ekle</a>
+
+<% if (typeof pages !== 'undefined' && pages.length > 0) { %>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Başlık</th>
+                <th>Slug (URL)</th>
+                <th>Durum</th>
+                <th>Oluşturulma</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% pages.forEach(page => { %>
+                <tr>
+                    <td><%= page.id %></td>
+                    <td><%= page.title %></td>
+                    <td><%= page.slug %></td>
+                    <td>
+                        <span class="badge badge-<%= page.status === 'published' ? 'success' : 'secondary' %>">
+                            <%= page.status.charAt(0).toUpperCase() + page.status.slice(1) %>
+                        </span>
+                    </td>
+                    <td><%= page.created_at.toLocaleDateString('tr-TR') %></td>
+                    <td>
+                        <a href="/admin/pages/edit/<%= page.id %>" class="btn btn-sm btn-warning mr-1">Düzenle</a>
+                        <!-- Silme formu (Sadece Admin görebilir gibi bir kontrol eklenebilir) -->
+                            <form action="/admin/pages/delete/<%= page.id %>" method="POST" style="display:inline;">
+                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('\'<%= page.title %>\' sayfasını silmek istediğinizden emin misiniz?');">Sil</button>
+                            </form>
+                        <!-- Public sitede görüntüleme linki -->
+                        <!-- <a href="/<%= page.slug %>" target="_blank" class="btn btn-sm btn-info">Görüntüle</a> -->
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+<% } else { %>
+    <div class="alert alert-info">Gösterilecek sabit sayfa bulunamadı.</div>
+<% } %>
+
+<!-- Badge stilleri (admin-style.css'te varsa gerek yok) -->
+ <style> .badge{display:inline-block;padding:.25em .4em;font-size:75%;font-weight:700;line-height:1;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25rem}.badge-success{color:#fff;background-color:#28a745}.badge-secondary{color:#fff;background-color:#6c757d} </style>

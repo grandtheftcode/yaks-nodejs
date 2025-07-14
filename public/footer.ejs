@@ -1,0 +1,90 @@
+<!-- start site-footer -->
+    <footer class="site-footer">
+        <div class="upper-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col col-md-4 col-sm-6">
+                <div class="widget about-widget">
+                  <div class="footer-logo"><img src="<%= siteSettings.site_logo.setting_value %>" alt></div>
+                  <ul class="contact-info">
+                    <div class="text">
+                      <%= siteSettings.footer_textarea.setting_value %>
+                      </div>
+                  </ul>
+                </div>
+              </div>
+  
+              <div class="col col-md-4 col-sm-6">
+                <div class="widget service-links-widget">
+                  <h3>Site Haritası</h3>
+                  <ul>
+                    <% if (typeof mainNavItems !== 'undefined' && mainNavItems.length > 0) { %>
+                          <% function renderMenuItems(items) {
+                              items.forEach(item => { %>
+                                 <li><a href="<%= item.url %>" target="<%= item.target %>"><%= item.title %></a>
+                                  <% if (item.children && item.children.length > 0) { %>
+                                     <ul style="list-style-type: none; padding-top: 15px;" class="sub-menu"> <% renderMenuItems(item.children) %> </ul>
+                                  <% } %>
+                                  </li>
+                          <%  });
+                          } %>
+                          <% renderMenuItems(mainNavItems) %>
+                          <% } %>
+                  </ul>
+                </div>
+              </div>
+  
+              <div class="col col-md-4 col-sm-6">
+                <div class="widget about-widget">
+                  <ul>
+                    <li>
+                        <ul class="contact-info">
+                            <li><i class="fa fa-home"></i> <%= siteSettings.address.setting_value %></li>
+                            <li><i class="fa fa-phone"></i><%= siteSettings.telephone.setting_value %></li>
+                            <li><i class="fa fa-envelope"></i> <%= siteSettings.eposta.setting_value %></li>
+                          </ul>
+                     
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> <!-- end upper-footer -->
+        <div class="copyright-info">
+          <div class="container">
+            <a style="color:white">
+            <%
+            let footerContent;
+            if (typeof siteSettings !== 'undefined' && siteSettings.footer_text && siteSettings.footer_text.setting_value) {
+                // Eğer veritabanından gelen değer varsa onu kullan (HTML içerebilir diye ile basalım)
+                footerContent =  siteSettings.footer_text.setting_value ;
+            } else {
+                // Yoksa varsayılan metni oluştur (yılı JavaScript ile hesapla)
+                const currentYear = new Date().getFullYear();
+                footerContent = `© ${currentYear} YAKS Yazılım`; // Template literal kullanımı
+            }
+        %>
+        <%- footerContent %> 
+    </a>
+          </div>
+        </div>
+      </footer>
+      <!-- end site-footer -->
+    </div>
+    <!-- end of page-wrapper -->
+  
+  
+  
+    <!-- All JavaScript files
+      ================================================== -->
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/bootstrap.min.js"></script>
+  
+    <!-- Plugins for this template -->
+    <script src="/assets/js/jquery-plugin-collection.js"></script>
+    <script src="/assets/js/jquery.mCustomScrollbar.js"></script>
+  
+    <!-- Custom script for this template -->
+    <script src="/assets/js/script.js"></script>
+  </body>

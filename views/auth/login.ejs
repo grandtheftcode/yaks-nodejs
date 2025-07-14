@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof title !== 'undefined' ? title : 'Login' %></title>
+    <!-- Basit stillendirme veya admin CSS'ini dahil et -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- Admin stilini kullanalım -->
+    <style>
+        body {
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .login-container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-container h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+         /* Flash mesaj stilleri (layout'tan farklı olabilir) */
+         .alert { padding: 10px; margin-bottom: 15px; border-radius: 4px; }
+         .alert-danger, .alert-error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
+         .alert-success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <h1>Yaks Panel Giriş</h1>
+
+       
+        <% if (typeof error_msg !== 'undefined' && error_msg && error_msg.length > 0) { %>
+            <div class="alert alert-danger"><%= error_msg %></div>
+        <% } %>
+        <% if (typeof error !== 'undefined' && error && error.length > 0) { %>
+            
+            <div class="alert alert-error"><%= error %></div>
+        <% } %>
+        
+        <% if (typeof success_msg !== 'undefined' && success_msg && success_msg.length > 0) { %>
+            <div class="alert alert-success"><%= success_msg %></div>
+        <% } %>
+
+
+        <form action="/login" method="POST">
+             <!-- CSRF Token Input (eğer kullanılıyorsa) -->
+          
+            <div class="form-group">
+                <label for="email">E-posta Adresi:</label>
+                <input type="email" class="form-control" id="email" name="email" required autofocus>
+
+                 
+            </div>
+            <div class="form-group">
+                <label for="password">Şifre:</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Giriş Yap</button>
+        </form>
+
+         <!-- İsteğe Bağlı: Şifremi unuttum linki -->
+         <!-- <div style="text-align: center; margin-top: 15px;">
+             <a href="/forgot-password">Şifremi Unuttum?</a>
+         </div> -->
+    </div>
+
+     <!-- Form grubu ve buton stilleri (style.css'ten gelmiyorsa) -->
+     <style>
+        .form-group{margin-bottom:1rem}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;transition:border-color .15s ease-in-out,box-shadow .15s ease-in-out;box-sizing:border-box}label{display:inline-block;margin-bottom:.5rem;font-weight:700}.btn-block{display:block;width:100%}.btn-primary{color:#fff;background-color:#007bff;border-color:#007bff}.btn{display:inline-block;font-weight:400;color:#212529;text-align:center;vertical-align:middle;cursor:pointer;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none;transition:color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out}
+     </style>
+</body>
+</html>

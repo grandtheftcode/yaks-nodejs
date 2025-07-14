@@ -1,0 +1,18 @@
+<!-- views/public/page.ejs -->
+
+
+    <% if (typeof page !== 'undefined') { %>
+
+
+<% if (page.content.includes(':slider:')) { %>
+    <%- include('../../public/slider.ejs') %>
+  <% } else { %>
+    
+  <% } %>
+
+<div class="container">
+    <%- page.content.replace(":slider:","") %> 
+</div>
+<% } else { %>
+    <p>Sayfa bulunamadı.</p>
+<% } %>

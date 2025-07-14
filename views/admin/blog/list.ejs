@@ -1,0 +1,104 @@
+<!-- views/admin/blog/list.ejs -->
+
+<h2>Blog Yazıları Yönetimi</h2>
+<a href="/admin/blog/add" class="btn btn-success mb-3">Yeni Yazı Ekle</a>
+
+<!-- Filtreleme Formu (İsteğe Bağlı Eklenebilir) -->
+<!--
+<form action="/admin/blog" method="GET" class="form-inline mb-3">
+    <select name="status" class="form-control mr-2">
+        <option value="">Tüm Durumlar</option>
+        <option value="published" <%-/* typeof query !== 'undefined' && query.status === 'published' ? 'selected' : '' */ %>>Yayınlanmış</option>
+        <option value="draft" <%-/* typeof query !== 'undefined' && query.status === 'draft' ? 'selected' : '' */ %>>draft</option>
+    </select>
+    <button type="submit" class="btn btn-secondary">Filtrele</button>
+</form>
+-->
+
+<% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+    <p>Toplam <%= totalPosts %> yazı bulundu.</p>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Başlık</th>
+                <th>Yazar</th>
+                <th>Kategori</th>
+                <th>Durum</th>
+                <th>Oluşturulma</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% posts.forEach(post => { %>
+                <tr>
+                    <td><%= post.id %></td>
+                    <td><%= post.title %></td>
+                    <td><%= post.author_username || 'Bilinmiyor' %></td>
+                    <td><%= post.category_name || '-' %></td>
+                    <td>
+                        <span class="badge badge-<%= post.status === 'published' ? 'success' : 'secondary' %>">
+                            <%= post.status.charAt(0).toUpperCase() + post.status.slice(1) %>
+                        </span>
+                    </td>
+                    <td><%= post.created_at.toLocaleDateString('tr-TR') %></td>
+                    <td>
+                        <a href="/admin/blog/edit/<%= post.id %>" class="btn btn-sm btn-warning mr-1">Düzenle</a>
+                        <!-- Silme formu -->
+                        <form action="/admin/blog/delete/<%= post.id %>" method="POST" style="display:inline;">
+                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('\'<%= post.title %>\' başlıklı yazıyı silmek istediğinizden emin misiniz?');">Sil</button>
+                        </form>
+                        <!-- Public sitede görüntüleme linki (slug kullanarak) -->
+                        <!-- <a href="/blog/<%= post.slug %>" target="_blank" class="btn btn-sm btn-info">Görüntüle</a> -->
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+
+    <!-- Sayfalama Navigasyonu -->
+    <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation">
+            <ul class="pagination">
+                <!-- Önceki Sayfa -->
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="/admin/blog?page=<%= currentPage - 1 %>" aria-label="Previous">
+                        <span aria-hidden="true">«</span>
+                        <span class="sr-only">Önceki</span>
+                    </a>
+                </li>
+
+                <!-- Sayfa Numaraları (Basit versiyon) -->
+                <% for (let i = 1; i <= totalPages; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="/admin/blog?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+
+                <!-- Sonraki Sayfa -->
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="/admin/blog?page=<%= currentPage + 1 %>" aria-label="Next">
+                        <span aria-hidden="true">»</span>
+                        <span class="sr-only">Sonraki</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    <% } %>
+    <!-- /Sayfalama Navigasyonu -->
+
+<% } else { %>
+    <div class="alert alert-info">Gösterilecek blog yazısı bulunamadı.</div>
+<% } %>
+
+<!-- Sayfalama CSS'i için Bootstrap Badge ve Pagination stilleri eklenmiş olmalı (admin-style.css) -->
+<style>
+    .badge { display: inline-block; padding: .25em .4em; font-size: 75%; font-weight: 700; line-height: 1; text-align: center; white-space: nowrap; vertical-align: baseline; border-radius: .25rem; }
+    .badge-success { color: #fff; background-color: #28a745; }
+    .badge-secondary { color: #fff; background-color: #6c757d; }
+    .pagination { display: flex; padding-left: 0; list-style: none; border-radius: .25rem; }
+    .page-item.disabled .page-link { color: #6c757d; pointer-events: none; cursor: auto; background-color: #fff; border-color: #dee2e6; }
+    .page-item.active .page-link { z-index: 1; color: #fff; background-color: #007bff; border-color: #007bff; }
+    .page-link { position: relative; display: block; padding: .5rem .75rem; margin-left: -1px; line-height: 1.25; color: #007bff; background-color: #fff; border: 1px solid #dee2e6; }
+    .page-link:hover { z-index: 2; color: #0056b3; text-decoration: none; background-color: #e9ecef; border-color: #dee2e6; }
+</style>

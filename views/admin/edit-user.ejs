@@ -1,0 +1,46 @@
+<!-- views/admin/edit-user.ejs (Rol alanı eklenmiş hali) -->
+<% if (typeof user !== 'undefined') { %>
+    <h2>Kullanıcıyı Düzenle: <%= user.username %></h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/users/edit/<%= user.id %>" method="POST" class="user-form">
+        <div class="form-group">
+            <label for="username">Kullanıcı Adı:</label>
+            <input type="text" class="form-control" id="username" name="username" value="<%= user.username %>" required>
+        </div>
+        <div class="form-group">
+            <label for="email">E-posta:</label>
+            <input type="email" class="form-control" id="email" name="email" value="<%= user.email %>" required>
+        </div>
+
+        <!-- Rol Seçim Alanı -->
+        <div class="form-group">
+            <label for="role">Rol:</label>
+            <select class="form-control" id="role" name="role" required>
+                <% if (typeof ROLES !== 'undefined' && typeof ROLE_NAMES !== 'undefined') { %>
+                    <% Object.keys(ROLES).forEach(roleKey => { %>
+                        <% const roleValue = ROLES[roleKey]; %>
+                        <option value="<%= roleValue %>" <%= user.role === roleValue ? 'selected' : '' %>>
+                            <%= ROLE_NAMES[roleValue] %>
+                        </option>
+                    <% }); %>
+                <% } else { %>
+                     <option value="<%= user.role %>" selected>Mevcut Rol (<%= user.role %>) - İsimler Yüklenemedi</option>
+                <% } %>
+            </select>
+        </div>
+        <!-- /Rol Seçim Alanı -->
+
+        <div class="form-group">
+            <p><small>Şifre bu formdan değiştirilemez.</small></p>
+        </div>
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a href="/admin/users" class="btn btn-secondary">İptal</a>
+    </form>
+<% } else { %>
+     <div class="alert alert-warning">Kullanıcı bilgileri yüklenemedi.</div>
+     <a href="/admin/users" class="btn btn-secondary">Kullanıcı Listesine Dön</a>
+<% } %>

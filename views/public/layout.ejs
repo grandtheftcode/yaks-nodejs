@@ -1,0 +1,25 @@
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Meta Tags -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title><%= typeof pageTitle !== 'undefined' ? pageTitle : (typeof siteSettings !== 'undefined' && siteSettings.site_title ? siteSettings.site_title.setting_value : 'Site Başlığı') %></title>
+  <meta name="description" content="<%= typeof pageDescription !== 'undefined' ? pageDescription : (typeof siteSettings !== 'undefined' && siteSettings.site_description ? siteSettings.site_description.setting_value : '') %>">
+ 
+  <%- include('../../public/header.ejs') %>
+
+  <div class="container-fuild">
+    <%- body %>
+  </div> 
+  
+  <%- include('../../public/footer.ejs') %>
+
+  </html>

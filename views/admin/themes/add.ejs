@@ -1,0 +1,14 @@
+<!-- views/admin/carousel/edit.ejs -->
+
+    <h2>Temayı Düzenle</h2>
+    <!-- Dosya yükleme için enctype GEREKLİ -->
+    <form action="/admin/themes/upload/" method="POST" enctype="multipart/form-data">
+         <div class="form-group">
+            <label for="image_path">Temayı Ekle:</label>
+            <input type="file" class="form-control-file" id="file" name="file" >
+        </div>
+        <button type="submit" class="btn btn-primary">Tema Yükle</button>
+        <a href="/admin/themes" class="btn btn-secondary">İptal</a>
+    </form>
+<!-- Basit Form Stilleri -->
+ <style>.form-group{margin-bottom:1rem}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;box-sizing:border-box}.form-control-file{display:block;width:100%}.img-thumbnail{padding:.25rem;background-color:#fff;border:1px solid #dee2e6;border-radius:.25rem;max-width:100%;height:auto}.mb-2{margin-bottom:.5rem!important}label{display:inline-block;margin-bottom:.5rem;font-weight:700}.btn{display:inline-block;font-weight:400;text-align:center;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn-primary{color:#fff;background-color:#007bff;border-color:#007bff}.btn-secondary{color:#fff;background-color:#6c757d;border-color:#6c757d}</style>

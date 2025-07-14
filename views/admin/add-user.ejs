@@ -1,0 +1,41 @@
+<!-- views/admin/add-user.ejs (Rol alanı eklenmiş hali) -->
+<h2>Yeni Kullanıcı Ekle</h2>
+
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form action="/admin/users/add" method="POST" class="user-form">
+    <div class="form-group">
+        <label for="username">Kullanıcı Adı:</label>
+        <input type="text" class="form-control" id="username" name="username" value="<%= typeof formData !== 'undefined' ? formData.username : '' %>" required>
+    </div>
+    <div class="form-group">
+        <label for="email">E-posta:</label>
+        <input type="email" class="form-control" id="email" name="email" value="<%= typeof formData !== 'undefined' ? formData.email : '' %>" required>
+    </div>
+    <div class="form-group">
+        <label for="password">Şifre:</label>
+        <input type="password" class="form-control" id="password" name="password" required>
+    </div>
+
+    <!-- Yeni Rol Seçim Alanı -->
+    <div class="form-group">
+        <label for="role">Rol:</label>
+        <select class="form-control" id="role" name="role" required>
+            <option value="" disabled <%= typeof formData === 'undefined' || typeof formData.role === 'undefined' ? 'selected' : '' %>>-- Rol Seçin --</option>
+            <% if (typeof ROLES !== 'undefined' && typeof ROLE_NAMES !== 'undefined') { %>
+                <% Object.keys(ROLES).forEach(roleKey => { %>
+                    <% const roleValue = ROLES[roleKey]; %>
+                    <option value="<%= roleValue %>" <%= typeof formData !== 'undefined' && formData.role === roleValue ? 'selected' : '' %>>
+                        <%= ROLE_NAMES[roleValue] %>
+                    </option>
+                <% }); %>
+            <% } %>
+        </select>
+    </div>
+    <!-- /Yeni Rol Seçim Alanı -->
+
+    <button type="submit" class="btn btn-primary">Kullanıcı Ekle</button>
+    <a href="/admin/users" class="btn btn-secondary">İptal</a>
+</form>

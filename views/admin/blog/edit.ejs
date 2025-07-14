@@ -1,0 +1,83 @@
+<!-- views/admin/blog/edit.ejs -->
+
+<% if (typeof post !== 'undefined') { %>
+    <h2>Yazıyı Düzenle: <%= post.title %></h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/blog/edit/<%= post.id %>" method="POST" class="blog-form">
+        <div class="form-group">
+            <label for="title">Başlık:</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= post.title %>" required>
+            <small class="form-text text-muted">URL (slug) bu başlıktan otomatik olarak güncellenecektir.</small>
+        </div>
+        <div class="form-group">
+            <label for="slug">Slug (URL):</label>
+            <input type="text" class="form-control" id="slug" name="slug_display" value="<%= post.slug %>" disabled>
+        </div>
+
+        <div class="form-group">
+            <label for="content">İçerik:</label>
+            <!-- !!! GERÇEK UYGULAMADA BURAYA TINYMCE VEYA BAŞKA BİR WYSIWYG EDİTÖR EKLENMELİ !!! -->
+            <textarea id="summernote"  class="form-control" id="content" name="content" rows="10" required><%= post.content %></textarea>
+            <!-- Örnek TinyMCE scriptleri (add.ejs'deki gibi) -->
+        </div>
+
+        <div class="form-row">
+             <div class="form-group col-md-6">
+                <label for="category_id">Kategori:</label>
+                <select class="form-control" id="category_id" name="category_id">
+                    <option value="">-- Kategori Seç (İsteğe Bağlı) --</option>
+                    <% if (typeof categories !== 'undefined') { %>
+                        <% categories.forEach(category => { %>
+                            <option value="<%= category.id %>" <%= post.category_id == category.id ? 'selected' : '' %>>
+                                <%= category.name %>
+                            </option>
+                        <% }); %>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="status">Durum:</label>
+                <select class="form-control" id="status" name="status" required>
+                    <option value="draft" <%= post.status === 'draft' ? 'selected' : '' %>>draft</option>
+                    <option value="published" <%= post.status === 'published' ? 'selected' : '' %>>Yayınlanmış</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Mevcut Öne Çıkan Görseli Göster ve Değiştirme Seçeneği (Multer vb. eklendikten sonra) -->
+        <!--
+         <div class="form-group">
+             <label>Mevcut Öne Çıkan Görsel:</label>
+             <% if (post.featured_image) { %>
+                 <img src="/<%= post.featured_image %>" alt="Featured Image" style="max-width: 200px; display: block; margin-bottom: 10px;">
+             <% } else { %>
+                 <p>Yok.</p>
+             <% } %>
+             <label for="featured_image">Görseli Değiştir (İsteğe Bağlı):</label>
+             <input type="file" class="form-control-file" id="featured_image" name="featured_image">
+        </div>
+        -->
+
+         <div class="form-group">
+            <small>Yazar: <%= post.author_username %></small>
+            <!-- Yazar değiştirme formu buraya eklenebilir (sadece yetkili kullanıcılar için) -->
+        </div>
+
+        <button type="submit" class="btn btn-primary">Yazıyı Güncelle</button>
+        <a href="/admin/blog" class="btn btn-secondary">İptal</a>
+    </form>
+
+    <style>
+         .form-row { display: flex; flex-wrap: wrap; margin-right: -5px; margin-left: -5px; }
+         .form-row > .col-md-6 { position: relative; width: 100%; padding-right: 5px; padding-left: 5px; flex: 0 0 50%; max-width: 50%; }
+    </style>
+
+<% } else { %>
+    <div class="alert alert-warning">Yazı bilgileri yüklenemedi.</div>
+    <a href="/admin/blog" class="btn btn-secondary">Yazı Listesine Dön</a>
+<% } %>

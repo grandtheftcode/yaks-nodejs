@@ -1,0 +1,84 @@
+
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">Tüm Ürünler</h3>
+                        <div class="box-tools">
+                             <a href="/admin/products/add" class="btn btn-primary btn-sm">
+                                <i class="fa fa-plus"></i> Yeni Ürün Ekle
+                            </a>
+                        </div>
+                    </div>
+                    <div class="box-body table-responsive no-padding">
+                        <% if (typeof success !== 'undefined' && success.length > 0) { %>
+                            <div class="alert alert-success alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <%= success %>
+                            </div>
+                        <% } %>
+                         <% if (typeof error !== 'undefined' && error.length > 0) { %>
+                            <div class="alert alert-danger alert-dismissible">
+                                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                <%= error %>
+                            </div>
+                        <% } %>
+
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Adı</th>
+                                    <th>SKU</th>
+                                    <th>Fiyat</th>
+                                    <th>Stok</th>
+                                    <th>Durum</th>
+                                    <th>Oluşturulma</th>
+                                    <th>İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% if (products.length > 0) { %>
+                                    <% products.forEach(product => { %>
+                                        <tr>
+                                            <td><%= product.id %></td>
+                                            <td><%= product.name %></td>
+                                            <td><%= product.sku || '-' %></td>
+                                            <td><%= product.price %> TL</td>
+                                            <td><%= product.stock_quantity %></td>
+                                            <td>
+                                                <% if (product.status === 'published') { %>
+                                                    <span class="label label-success">Yayınlandı</span>
+                                                <% } else if (product.status === 'draft') { %>
+                                                     <span class="label label-warning">Taslak</span>
+                                                <% } else { %>
+                                                     <span class="label label-default">Gizli</span>
+                                                <% } %>
+                                            </td>
+                                            <td><%= new Date(product.created_at).toLocaleDateString('tr-TR') %></td>
+                                            <td>
+                                                <a href="/admin/products/edit/<%= product.id %>" class="btn btn-xs btn-warning">
+                                                    <i class="fa fa-pencil"></i> Düzenle
+                                                </a>
+                                                <form action="/admin/products/delete/<%= product.id %>/" method="POST" style="display: inline;" onsubmit="return confirm('Bu ürünü silmek istediğinizden emin misiniz?');">
+                                                    <button type="submit" class="btn btn-xs btn-danger">
+                                                        <i class="fa fa-trash"></i> Sil
+                                                    </button>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                    <% }); %>
+                                <% } else { %>
+                                    <tr>
+                                        <td colspan="8" class="text-center">Gösterilecek ürün bulunamadı.</td>
+                                    </tr>
+                                <% } %>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

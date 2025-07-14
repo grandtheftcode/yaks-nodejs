@@ -1,0 +1,34 @@
+<!-- views/admin/pages/add.ejs -->
+
+<h2>Yeni Sabit Sayfa Ekle</h2>
+
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form action="/admin/pages/add" method="POST" class="page-form">
+    <div class="form-group">
+        <label for="title">Sayfa Başlığı:</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= typeof formData !== 'undefined' ? formData.title : '' %>" required>
+        <small class="form-text text-muted">URL (slug) bu başlığan otomatik olarak oluşturulacaktır.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="content">Sayfa İçeriği:</label>
+        <!-- !!! YİNE BURAYA BİR WYSIWYG EDİTÖR (TINYMCE VB.) EKLENMELİ !!! -->
+        <textarea class="form-control" id="summernote" name="content" rows="15" required><%= typeof formData !== 'undefined' ? formData.content : '' %></textarea>
+
+         <!-- Örnek TinyMCE scriptleri (blog/add.ejs'deki gibi) -->
+    </div>
+
+    <div class="form-group">
+        <label for="status">Durum:</label>
+        <select class="form-control" id="status" name="status" required>
+            <option value="published" <%= typeof formData === 'undefined' || (formData && formData.status === 'published') ? 'selected' : '' %>>Yayınlanmış</option>
+            <option value="draft" <%= typeof formData !== 'undefined' && formData.status === 'draft' ? 'selected' : '' %>>draft</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Sayfa Ekle</button>
+    <a href="/admin/pages" class="btn btn-secondary">İptal</a>
+</form>

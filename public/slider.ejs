@@ -1,0 +1,42 @@
+<!-- start of hero -->
+<% if (typeof carouselSlides !=='undefined' && carouselSlides.length> 0) { %>
+    <section class="hero hero-slider-wrapper">
+        <div class="hero-slider hero-slider-style-1">
+            <% carouselSlides.forEach(slide=> { %>
+                <div class="slide">
+                    <img src="<%= slide.image_path %>" alt class="slider-bg">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col col-lg-8 col-sm-9 slide-caption">
+                                <% if (slide.title || slide.caption) { %>
+                                    <% if (slide.link_url) { %> </a>
+                                        <% } %>
+                                            <% if (slide.title) { %>
+                                                <h2>
+                                                    <%= slide.title %>
+                                                </h2>
+                                                <% } %>
+                                                    <% if (slide.caption) { %>
+                                                        <p>
+                                                            <%= slide.caption %>
+                                                        </p>
+                                                        <% } %>
+                                                            <div class="btns">
+                                                                <% if (slide.link_url) { %> <a class="theme-btn"
+                                                                        href="<%= slide.link_url %>"
+                                                                        target="<%= slide.link_target %>">
+                                                                        <% } %>Detaylar Içın tıklayın
+                                                                    </a>
+                                                                    
+                                                                        <% if (slide.link_url) { %> </a>
+                                                                            <% } %>
+                                                                    <% } %>
+                                                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+        </div>
+    </section>
+    <% } %>

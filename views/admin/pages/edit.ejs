@@ -1,0 +1,43 @@
+<!-- views/admin/pages/edit.ejs -->
+
+<% if (typeof page !== 'undefined') { %>
+    <h2>Sayfayı Düzenle: <%= page.title %></h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/pages/edit/<%= page.id %>" method="POST" class="page-form">
+        <div class="form-group">
+            <label for="title">Sayfa Başlığı:</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= page.title %>" required>
+             <small class="form-text text-muted">URL (slug) bu başlıktan otomatik olarak güncellenecektir.</small>
+        </div>
+         <div class="form-group">
+            <label for="slug">Slug (URL):</label>
+            <input type="text" class="form-control" id="slug" name="slug_display" value="<%= page.slug %>" disabled>
+        </div>
+
+        <div class="form-group">
+            <label for="content">Sayfa İçeriği:</label>
+            <!-- !!! YİNE BURAYA BİR WYSIWYG EDİTÖR (TINYMCE VB.) EKLENMELİ !!! -->
+            <textarea class="form-control" id="summernote" id="content" name="content" rows="15" required><%= page.content %></textarea>
+             <!-- Örnek TinyMCE scriptleri (blog/add.ejs'deki gibi) -->
+        </div>
+
+        <div class="form-group">
+            <label for="status">Durum:</label>
+            <select class="form-control" id="status" name="status" required>
+                 <option value="published" <%= page.status === 'published' ? 'selected' : '' %>>Yayınlanmış</option>
+                 <option value="draft" <%= page.status === 'draft' ? 'selected' : '' %>>draft</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sayfayı Güncelle</button>
+        <a href="/admin/pages" class="btn btn-secondary">İptal</a>
+    </form>
+
+<% } else { %>
+    <div class="alert alert-warning">Sayfa bilgileri yüklenemedi.</div>
+    <a href="/admin/pages" class="btn btn-secondary">Sayfa Listesine Dön</a>
+<% } %>

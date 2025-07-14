@@ -1,0 +1,32 @@
+<!-- views/admin/categories/edit.ejs -->
+
+<% if (typeof category !== 'undefined') { %>
+    <h2>Kategoriyi Düzenle: <%= category.name %></h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/categories/edit/<%= category.id %>" method="POST" class="category-form">
+        <div class="form-group">
+            <label for="name">Kategori Adı:</label>
+            <input type="text" class="form-control" id="name" name="name" value="<%= category.name %>" required>
+             <small class="form-text text-muted">URL (slug) bu isimden otomatik olarak güncellenecektir.</small>
+        </div>
+         <div class="form-group">
+            <label for="slug">Slug (URL):</label>
+            <input type="text" class="form-control" id="slug" name="slug_display" value="<%= category.slug %>" disabled>
+             <small class="form-text text-muted">Bu alan otomatik güncellenir, manuel değiştirilemez.</small>
+        </div>
+        <div class="form-group">
+            <label for="description">Açıklama (İsteğe Bağlı):</label>
+            <textarea class="form-control" id="description" name="description" rows="3"><%= category.description %></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a href="/admin/categories" class="btn btn-secondary">İptal</a>
+    </form>
+<% } else { %>
+    <div class="alert alert-warning">Kategori bilgileri yüklenemedi.</div>
+    <a href="/admin/categories" class="btn btn-secondary">Kategori Listesine Dön</a>
+<% } %>
