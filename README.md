@@ -56,7 +56,7 @@ npm start
 
 komutları kullanılarak proje aktif edilir
 
-Varsayılan olarak: [http://localhost:3000](http://localhost:3000)
+Varsayılan olarak: [http://localhost:3000/login](http://localhost:3000/login)
 kullanıcı adı ve şifre
 ```
 
