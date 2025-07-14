@@ -1,4 +1,3 @@
-# yaks-nodejs
 ```
 
 **Türkiye'nin Açık Kaynak Node.js Tabanlı CMS Sistemi**
