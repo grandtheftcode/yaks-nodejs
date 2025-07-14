@@ -75,7 +75,7 @@ Yeni geliştiriciler için dost canlısı bir ortam sunmayı hedefliyoruz.
 
 ## 📝 Lisans
 
-MIT Lisansı
+GNU Lisansı
 
 ---
 
