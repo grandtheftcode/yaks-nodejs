@@ -1,0 +1,46 @@
+<!-- views/admin/menus/edit-item.ejs (Ayrı düzenleme sayfası istenirse) -->
+
+<% if (typeof menuItem !== 'undefined') { %>
+    <h2>Menü Öğesini Düzenle: <%= menuItem.title %> (<%= menu.name %> Menüsü)</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <form action="/admin/menus/items/<%= menuItem.id %>/edit" method="POST">
+         <div class="form-group">
+             <label for="title">Görünecek Metin:</label>
+             <input type="text" class="form-control" id="title" name="title" value="<%= menuItem.title %>" required>
+         </div>
+         <div class="form-group">
+             <label for="url">URL (Link):</label>
+             <input type="text" class="form-control" id="url" name="url" value="<%= menuItem.url %>" required>
+         </div>
+          <div class="form-group">
+             <label for="target">Hedef:</label>
+             <select class="form-control" id="target" name="target">
+                 <option value="_self" <%= menuItem.target === '_self' ? 'selected' : '' %>>Aynı Pencere (_self)</option>
+                 <option value="_blank" <%= menuItem.target === '_blank' ? 'selected' : '' %>>Yeni Pencere (_blank)</option>
+             </select>
+         </div>
+          <div class="form-group">
+             <label for="parent_id">Alt Öğe Olarak Ekle (İsteğe Bağlı):</label>
+             <select class="form-control" id="parent_id" name="parent_id">
+                 <option value="">-- Üst Seviye Öğe --</option>
+                 <% if(typeof parentOptions !== 'undefined') { %>
+                     <% parentOptions.forEach(item => { %>
+                         <option value="<%= item.id %>" <%= menuItem.parent_id == item.id ? 'selected' : '' %>><%= item.title %></option>
+                     <% }) %>
+                 <% } %>
+             </select>
+          </div>
+         <!-- Sıralama (item_order) genellikle buradan değiştirilmez -->
+
+         <button type="submit" class="btn btn-primary">Güncelle</button>
+         <a href="/admin/menus/items/<%= menu.id %>/edit/" class="btn btn-secondary">İptal</a>
+     </form>
+
+<% } else { %>
+    <div class="alert alert-warning">Menü öğesi bulunamadı.</div>
+     <a href="/admin/menus" class="btn btn-secondary">Menü Listesine Dön</a>
+<% } %>

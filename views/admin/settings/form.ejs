@@ -1,0 +1,100 @@
+<!-- views/admin/settings/form.ejs -->
+
+<h2>Site Ayarları</h2>
+<p>Sitenizin genel ayarlarını buradan düzenleyebilirsiniz.</p>
+
+<a class="btn btn-primary" href="/admin/themes">Şablon Yükle</a>
+
+<!-- Dosya yükleme için enctype="multipart/form-data" GEREKLİ -->
+<form action="/admin/settings" method="POST" enctype="multipart/form-data">
+    <!-- CSRF Token Input (eğer kullanılıyorsa) -->
+
+    <% if(typeof settings !== 'undefined' && settings.length > 0) { %>
+        <% settings.forEach(setting => { %>
+            <div class="form-group row setting-item">
+                <label for="<%= setting.setting_key %>" class="col-sm-3 col-form-label setting-label">
+                    <!-- Ayar açıklamasını veya formatlanmış anahtarı göster -->
+                    <%= setting.description || setting.setting_key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) %>:
+                </label>
+                <div class="col-sm-9 setting-input">
+
+                    <% if (setting.input_type === 'textarea') { %>
+                        <textarea class="form-control" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>" rows="4"><%= setting.setting_value %></textarea>
+
+                    <% } else if (setting.input_type === 'color') { %>
+                        <input type="color" class="form-control form-control-color" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>" value="<%= setting.setting_value || '#000000' %>" title="Renk seçin">
+
+                    <% } else if (setting.input_type === 'file') { %>
+                        <div class="current-file-display mb-2">
+                            <% if(setting.setting_value && typeof setting.setting_value === 'string') { %>
+                                <small>Mevcut Dosya:</small><br>
+                                <% const isImage = setting.setting_value.match(/\.(jpeg|jpg|gif|png|svg|webp)$/i); %>
+                                <% if (isImage) { %>
+                                    <a href="<%= setting.setting_value %>" target="_blank">
+                                        <img src="<%= setting.setting_value %>?t=<%= Date.now() %>" alt="Mevcut <%= setting.setting_key %>" class="img-thumbnail" style="max-height: 60px; max-width: 200px;">
+                                    </a>
+                                 <% } else { %>
+                                     <a href="<%= setting.setting_value %>" target="_blank"><%= setting.setting_value.split('/').pop() %></a>
+                                <% } %>
+                            <% } else { %>
+                                 <small>Mevcut dosya yok.</small>
+                            <% } %>
+                        </div>
+                        <input type="file" class="form-control-file" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>">
+                        <small class="form-text text-muted">Yeni dosya yüklerseniz mevcut olan değiştirilir. (Max 5MB, Sadece Resim)</small>
+
+                    <% } else if (setting.input_type === 'number') { %>
+                         <input type="number" class="form-control" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>" value="<%= setting.setting_value %>">
+
+                    <% } else if (setting.input_type === 'checkbox') { %>
+                         <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>" value="1" <%= setting.setting_value == '1' ? 'checked' : '' %>>
+                            <label class="form-check-label" for="<%= setting.setting_key %>">
+                                 Aktif
+                            </label>
+                            <!-- Checkbox işaretlenmediğinde değer gitmez, bunu handle etmek için hidden input eklenebilir -->
+                            <!-- <input type="hidden" name="<%= setting.setting_key %>_submitted" value="1"> -->
+                         </div>
+                     <% } else { // Varsayılan input type: text %>
+                        <input type="text" class="form-control" id="<%= setting.setting_key %>" name="<%= setting.setting_key %>" value="<%= setting.setting_value %>">
+                    <% } %>
+                </div>
+            </div>
+            <hr>
+        <% }); %>
+    <% } else { %>
+        <div class="alert alert-warning">Veritabanında ayar bulunamadı. Lütfen başlangıç ayarlarını ekleyin.</div>
+    <% } %>
+
+    <div class="form-group row mt-4">
+        <div class="col-sm-9 offset-sm-3">
+            <button type="submit" class="btn btn-primary">Ayarları Kaydet</button>
+        </div>
+    </div>
+</form>
+
+<!-- Basit Form Stilleri (style.admin-style.css'te varsa gerek yok) -->
+<style>
+    .setting-item { margin-bottom: 1rem; }
+    .setting-label { font-weight: bold; text-align: right; padding-right: 15px; }
+    .form-group.row { margin-right: -15px; margin-left: -15px; } /* Bootstrap grid uyumu */
+    .col-sm-3 { width: 25%; float: left; position: relative; padding-right: 15px; padding-left: 15px; }
+    .col-sm-9 { width: 75%; float: left; position: relative; padding-right: 15px; padding-left: 15px; }
+    .offset-sm-3 { margin-left: 25%; }
+    .form-control-color { height: calc(1.5em + .75rem + 2px); padding: .375rem .75rem; max-width: 100px; } /* Renk input boyutu */
+    .form-control-file { display: block; width: 100%; }
+    .img-thumbnail { padding: .25rem; background-color: #fff; border: 1px solid #dee2e6; border-radius: .25rem; max-width: 100%; height: auto; }
+    .mb-2 { margin-bottom: .5rem !important; }
+    .mt-4 { margin-top: 1.5rem !important; }
+    hr { margin-top: 1rem; margin-bottom: 1rem; border: 0; border-top: 1px solid rgba(0,0,0,.1); }
+    /* Checkbox için */
+    .form-check { position: relative; display: block; padding-left: 1.25rem; }
+    .form-check-input { position: absolute; margin-top: .3rem; margin-left: -1.25rem; }
+    .form-check-label { margin-bottom: 0; }
+
+    /* Responsive için basit ayar */
+     @media (max-width: 767px) {
+       .setting-label { text-align: left; margin-bottom: 5px; }
+       .col-sm-3, .col-sm-9, .offset-sm-3 { width: 100%; float: none; margin-left: 0; }
+    }
+</style>

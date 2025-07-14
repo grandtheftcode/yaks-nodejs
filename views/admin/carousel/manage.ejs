@@ -1,0 +1,156 @@
+<!-- views/admin/carousel/manage.ejs -->
+
+<h2>Carousel Slayt Yönetimi</h2>
+<p>Ana sayfada veya belirtilen diğer alanlarda görünecek carousel slaytlarını buradan yönetebilirsiniz. Sürükleyerek sıralayabilirsiniz.</p>
+
+<div class="row">
+    <!-- Sol Taraf: Yeni Slayt Ekleme Formu -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Yeni Slayt Ekle</div>
+            <div class="card-body">
+                <!-- Dosya yükleme için enctype="multipart/form-data" GEREKLİ -->
+                <form action="/admin/carousel/add" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="image_path">Slayt Görseli:</label>
+                        <!-- name="image_path" multer ile eşleşmeli -->
+                        <input type="file" class="form-control-file" id="image_path" name="image_path" required accept="image/*">
+                        <small class="form-text text-muted">Zorunlu. İzin verilen formatlar: JPG, PNG, GIF, SVG, WebP. (Max 5MB)</small>
+                    </div>
+                    <div class="form-group">
+                        <label for="title">Başlık (İsteğe Bağlı):</label>
+                        <input type="text" class="form-control form-control-sm" id="title" name="title">
+                    </div>
+                    <div class="form-group">
+                        <label for="caption">Açıklama (İsteğe Bağlı):</label>
+                        <textarea class="form-control form-control-sm" id="caption" name="caption" rows="2"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="link_url">Link URL (İsteğe Bağlı):</label>
+                        <input type="url" class="form-control form-control-sm" id="link_url" name="link_url" placeholder="https://example.com veya /sayfa">
+                    </div>
+                    <div class="form-group">
+                        <label for="link_target">Link Hedefi:</label>
+                        <select class="form-control form-control-sm" id="link_target" name="link_target">
+                            <option value="_self" selected>Aynı Pencere (_self)</option>
+                            <option value="_blank">Yeni Pencere (_blank)</option>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="status">Durum:</label>
+                        <select class="form-control form-control-sm" id="status" name="status">
+                            <option value="published" selected>Yayınlanmış</option>
+                            <option value="draft">Taslak</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-sm">Yeni Slayt Ekle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sağ Taraf: Mevcut Slaytlar Listesi (Sıralanabilir) -->
+    <div class="col-md-8">
+        <div class="card">
+             <div class="card-header">
+                Mevcut Slaytlar
+                 <button id="saveCarouselOrderBtn" class="btn btn-primary btn-sm float-right" style="display: none;">Sırayı Kaydet</button>
+            </div>
+            <div class="card-body">
+                <% if (typeof slides !== 'undefined' && slides.length > 0) { %>
+                    <p><small>Slaytları sürükleyerek sıralayabilirsiniz. Değişiklik sonrası "Sırayı Kaydet" butonuna tıklayın.</small></p>
+                    <ul id="carousel-slide-list" class="list-group sortable-carousel-list">
+                        <% slides.forEach(slide => { %>
+                            <li class="list-group-item carousel-slide-item" data-id="<%= slide.id %>">
+                                <div class="d-flex align-items-center">
+                                    <!-- Sürükleme İkonu -->
+                                    <span class="handle mr-2" style="cursor: grab;"><i class="fas fa-arrows-alt"></i></span>
+                                    <!-- Görsel Önizleme -->
+                                    <img src="<%= slide.image_path %>?t=<%= Date.now() %>" alt="<%= slide.title || 'Carousel Slide' %>" class="img-thumbnail mr-3" style="height: 40px; width: auto;">
+                                    <!-- Başlık ve Durum -->
+                                    <div class="flex-grow-1">
+                                        <strong><%= slide.title || '(Başlık Yok)' %></strong><br>
+                                        <small class="text-muted"><%= slide.link_url || '(Link Yok)' %></small>
+                                         <span class="badge badge-<%= slide.status === 'published' ? 'success' : 'secondary' %> float-right"><%= slide.status %></span>
+                                    </div>
+                                    <!-- İşlem Butonları -->
+                                    <div class="ml-auto">
+                                        <a href="/admin/carousel/edit/<%= slide.id %>" class="btn btn-outline-warning btn-sm mr-1" title="Düzenle"><i class="fas fa-edit"></i></a>
+                                        <form action="/admin/carousel/delete/<%= slide.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Bu slaytı silmek istediğinizden emin misiniz?');">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Sil"><i class="fas fa-trash-alt"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </li>
+                        <% }); %>
+                    </ul>
+                <% } else { %>
+                    <div class="alert alert-secondary">Henüz carousel slaytı eklenmemiş.</div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gerekli Kütüphaneler ve JS (Menü Yönetimi ile benzer) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const slideList = document.getElementById('carousel-slide-list');
+        const saveOrderBtn = document.getElementById('saveCarouselOrderBtn');
+
+        if (slideList) {
+            new Sortable(slideList, {
+                animation: 150,
+                handle: '.handle', // Sürükleme ikonu
+                onEnd: function (evt) {
+                    saveOrderBtn.style.display = 'inline-block'; // Değişiklik olunca butonu göster
+                }
+            });
+        }
+
+         if (saveOrderBtn) {
+            saveOrderBtn.addEventListener('click', function () {
+                saveOrderBtn.disabled = true;
+                saveOrderBtn.textContent = 'Kaydediliyor...';
+
+                const slidesData = [];
+                const listItems = slideList.querySelectorAll('.carousel-slide-item');
+                listItems.forEach((item, index) => {
+                    slidesData.push({
+                        id: parseInt(item.getAttribute('data-id'), 10),
+                        slide_order: index // Yeni sıra index'e göre belirlenir
+                    });
+                });
+
+                // AJAX isteği
+                fetch('/admin/carousel/update-order', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ slides: slidesData })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Carousel sırası başarıyla kaydedildi!');
+                        saveOrderBtn.style.display = 'none';
+                    } else { alert('Hata: ' + data.message); }
+                })
+                .catch(error => {
+                    console.error('Error saving carousel order:', error);
+                    alert('Sıra kaydedilirken bir hata oluştu.');
+                })
+                .finally(() => {
+                     saveOrderBtn.disabled = false;
+                     saveOrderBtn.textContent = 'Sırayı Kaydet';
+                });
+            });
+        }
+    });
+</script>
+
+<!-- Basit Kart, Liste ve Sıralama Stilleri -->
+<style>
+    .card{margin-bottom:1rem;border:1px solid rgba(0,0,0,.125);border-radius:.25rem}.card-header{padding:.75rem 1.25rem;margin-bottom:0;background-color:rgba(0,0,0,.03);border-bottom:1px solid rgba(0,0,0,.125)}.card-body{padding:1.25rem}.list-group{padding-left:0;margin-bottom:0}.list-group-item{position:relative;display:block;padding:.75rem 1.25rem;margin-bottom:-1px;background-color:#fff;border:1px solid rgba(0,0,0,.125)}.list-group-item:first-child{border-top-left-radius:.25rem;border-top-right-radius:.25rem}.list-group-item:last-child{margin-bottom:0;border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem}.carousel-slide-item{cursor:move}.handle{color:#aaa;margin-right:10px}.img-thumbnail{padding:.25rem;background-color:#fff;border:1px solid #dee2e6;border-radius:.25rem;max-width:100%;height:auto}.mr-1{margin-right:.25rem!important}.mr-2{margin-right:.5rem!important}.mr-3{margin-right:1rem!important}.ml-auto{margin-left:auto!important}.float-right{float:right!important}.d-flex{display:flex!important}.align-items-center{align-items:center!important}.flex-grow-1{flex-grow:1!important}.badge{display:inline-block;padding:.25em .4em;font-size:75%;font-weight:700;line-height:1;text-align:center;white-space:nowrap;vertical-align:baseline;border-radius:.25rem}.badge-success{color:#fff;background-color:#28a745}.badge-secondary{color:#fff;background-color:#6c757d}
+</style>

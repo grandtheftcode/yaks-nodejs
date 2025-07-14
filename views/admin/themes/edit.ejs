@@ -1,0 +1,33 @@
+
+<h2>Temayı Düzenle: <%= theme.original_name %></h2>
+
+<form action="/admin/themes/<%= theme.id %>/update" method="POST">
+
+    <div>
+        <label for="original_name">Orijinal Ad:</label>
+        <input type="text" id="original_name" name="original_name" value="<%= typeof theme !== 'undefined' ? theme.original_name : '' %>" required>
+    </div>
+    <div>
+        <label for="stored_filename">Depolanan Dosya Adı:</label>
+        <input type="text" id="stored_filename" name="stored_filename" value="<%= typeof theme !== 'undefined' ? theme.stored_filename : '' %>" required>
+    </div>
+    <div>
+        <label for="upload_path">Yükleme Yolu:</label>
+        <input type="text" id="upload_path" name="upload_path" value="<%= typeof theme !== 'undefined' ? theme.upload_path : '' %>" required>
+    </div>
+    <div>
+        <label for="extracted_path">Çıkarılan Yol (Opsiyonel):</label>
+        <input type="text" id="extracted_path" name="extracted_path" value="<%= typeof theme !== 'undefined' && theme.extracted_path ? theme.extracted_path : '' %>">
+    </div>
+    <div>
+        <label for="mimetype">Mime Tipi (Opsiyonel):</label>
+        <input type="text" id="mimetype" name="mimetype" value="<%= typeof theme !== 'undefined' && theme.mimetype ? theme.mimetype : '' %>">
+    </div>
+    <div>
+        <label for="size_bytes">Boyut (Byte - Opsiyonel):</label>
+        <input type="number" id="size_bytes" name="size_bytes" value="<%= typeof theme !== 'undefined' && theme.size_bytes ? theme.size_bytes : '' %>">
+    </div>
+
+    <button type="submit">Güncelle</button>
+    <a href="/admin/themes/">İptal</a>
+</form>

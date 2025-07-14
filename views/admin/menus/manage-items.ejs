@@ -1,0 +1,233 @@
+<!-- views/admin/menus/manage-items.ejs -->
+
+<h2>Menü Öğelerini Yönet: <span class="text-primary"><%= menu.name %></span> (<%= menu.location_slug %>)</h2>
+<p>Aşağıdaki formu kullanarak yeni öğe ekleyebilir veya mevcut öğeleri düzenleyip sıralayabilirsiniz.</p>
+
+<div class="row">
+    <!-- Sol Taraf: Öğe Ekleme Formu -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                Yeni Menü Öğesi Ekle
+            </div>
+            <div class="card-body">
+                <form action="/admin/menus/items/<%= menu.id %>/add" method="POST">
+                    <div class="form-group">
+                        <label for="title">Görünecek Metin:</label>
+                        <input type="text" class="form-control form-control-sm" id="title" name="title" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="url">URL (Link):</label>
+                        <input type="text" class="form-control form-control-sm" id="url" name="url" placeholder="/hakkimizda veya https://..." required>
+                    </div>
+                     <div class="form-group">
+                        <label for="target">Hedef:</label>
+                        <select class="form-control form-control-sm" id="target" name="target">
+                            <option value="_self" selected>Aynı Pencere (_self)</option>
+                            <option value="_blank">Yeni Pencere (_blank)</option>
+                        </select>
+                    </div>
+                     <!-- Parent seçimi (isteğe bağlı, sadece mevcut öğeler parent olabilir) -->
+                     <div class="form-group">
+                        <label for="parent_id">Alt Öğe Olarak Ekle (İsteğe Bağlı):</label>
+                        <select class="form-control form-control-sm" id="parent_id" name="parent_id">
+                            <option value="">-- Üst Seviye Öğe --</option>
+                            <% if(typeof parentOptions !== 'undefined') { %>
+                                <% parentOptions.forEach(item => { %>
+                                    <option value="<%= item.id %>"><%= item.title %></option>
+                                <% }) %>
+                            <% } %>
+                        </select>
+                     </div>
+
+                    <button type="submit" class="btn btn-success btn-sm">Öğe Ekle</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sağ Taraf: Mevcut Öğeler Listesi (Sıralanabilir) -->
+    <div class="col-md-8">
+         <div class="card">
+            <div class="card-header">
+                Mevcut Öğeler (Sırala ve Düzenle)
+                 <button id="saveOrderBtn" class="btn btn-primary btn-sm float-right" style="display: none;">Sırayı Kaydet</button>
+            </div>
+            <div class="card-body">
+                 <% if (typeof menuItems !== 'undefined' && menuItems.length > 0) { %>
+                     <p><small>Öğeleri sürükleyerek sıralayabilir ve iç içe geçirebilirsiniz. Değişiklik sonrası "Sırayı Kaydet" butonuna tıklayın.</small></p>
+
+                     <!-- Sıralanabilir Liste Alanı -->
+                     <ul id="menu-item-list" class="list-group sortable-list">
+                         <% /* Burası JS ile dinamik olarak doldurulacak veya EJS ile hiyerarşik render edilecek */ %>
+                         <%
+                         function renderMenuItems(items, allItemsMap) {
+                             let html = '<ul class="list-group nested-sortable">'; // Alt listeler için class
+                             items.forEach(item => {
+                                 const currentItem = allItemsMap[item.id];
+                                 html += `<li class="list-group-item menu-item" data-id="${currentItem.id}">
+                                             <div class="d-flex justify-content-between align-items-center">
+                                                 <span>
+                                                     <i class="fas fa-arrows-alt handle mr-2"></i> <!-- Sürükleme ikonu -->
+                                                     <strong>${currentItem.title}</strong> <small class="text-muted">(${currentItem.url})</small>
+                                                 </span>
+                                                 <span>
+                                                     <a href="/admin/menus/items/${currentItem.id}/edit" class="btn btn-outline-warning btn-sm mr-1" title="Düzenle"><i class="fas fa-edit"></i></a>
+                                                     <form action="/admin/menus/items/${currentItem.id}/delete" method="POST" style="display:inline;" onsubmit="return confirm('\'${currentItem.title}\' öğesini silmek istediğinizden emin misiniz? Alt öğeleri de silinecektir.');">
+                                                         <button type="submit" class="btn btn-outline-danger btn-sm" title="Sil"><i class="fas fa-trash-alt"></i></button>
+                                                     </form>
+                                                 </span>
+                                             </div>`;
+                                 // Eğer alt öğeleri varsa, recursive olarak render et
+                                 if (currentItem.children && currentItem.children.length > 0) {
+                                     html += renderMenuItems(currentItem.children, allItemsMap); // Recursive çağrı
+                                 }
+                                 html += '</li>';
+                             });
+                             html += '</ul>';
+                             return html;
+                         }
+
+                         // Hiyerarşik yapıyı oluşturmak için Controller'dan gelen düz listeyi işle
+                         const itemMap = {};
+                         menuItems.forEach(item => itemMap[item.id] = { ...item, children: [] });
+                         const hierarchicalItems = [];
+                         menuItems.forEach(item => {
+                             if (item.parent_id && itemMap[item.parent_id]) {
+                                 itemMap[item.parent_id].children.push(itemMap[item.id]);
+                             } else {
+                                 hierarchicalItems.push(itemMap[item.id]);
+                             }
+                         });
+                         %>
+                         <%- renderMenuItems(hierarchicalItems, itemMap) %>
+
+                     </ul>
+                     <!-- /Sıralanabilir Liste Alanı -->
+
+                 <% } else { %>
+                     <div class="alert alert-secondary">Bu menüde henüz öğe bulunmuyor.</div>
+                 <% } %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gerekli Kütüphaneler (Örnek: SortableJS) ve Özel JS -->
+<!-- 1. Font Awesome (İkonlar için - isteğe bağlı) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!-- 2. SortableJS Kütüphanesi -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.15.0/Sortable.min.js"></script>
+<!-- 3. Özel JS Kodları -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const menuList = document.getElementById('menu-item-list');
+        const saveOrderBtn = document.getElementById('saveOrderBtn');
+        let sortableInstance = null;
+
+        if (menuList) {
+            // Ana listeyi ve iç içe listeleri sıralanabilir yap
+             sortableInstance = new Sortable(menuList.querySelector('.nested-sortable'), { // İlk UL'yi hedefle
+                group: 'nested', // İç içe listeler arasında taşımayı sağlar
+                animation: 150,
+                fallbackOnBody: true,
+                swapThreshold: 0.65,
+                handle: '.handle', // Sürükleme ikonu
+                onEnd: function (evt) {
+                    // Sıralama veya hiyerarşi değiştiğinde kaydet butonunu göster
+                    saveOrderBtn.style.display = 'inline-block';
+                }
+            });
+
+             // İç içe geçmiş tüm UL'leri de sıralanabilir yap (SortableJS'in nested yapısı için)
+             const nestedLists = menuList.querySelectorAll('.nested-sortable');
+             nestedLists.forEach(list => {
+                 if(list !== menuList.querySelector('.nested-sortable')) { // Ana listeyi tekrar ekleme
+                    new Sortable(list, {
+                        group: 'nested',
+                        animation: 150,
+                        fallbackOnBody: true,
+                        swapThreshold: 0.65,
+                        handle: '.handle',
+                         onEnd: function (evt) { saveOrderBtn.style.display = 'inline-block'; }
+                     });
+                 }
+             });
+
+        }
+
+        if (saveOrderBtn) {
+            saveOrderBtn.addEventListener('click', function () {
+                saveOrderBtn.disabled = true;
+                saveOrderBtn.textContent = 'Kaydediliyor...';
+
+                // Mevcut listeyi parse edip sunucuya gönderecek veriyi oluştur
+                const itemsData = [];
+                function parseList(listElement, parentId = null) {
+                    const children = listElement.children; // Doğrudan li elementlerini al
+                    for (let i = 0; i < children.length; i++) {
+                        const listItem = children[i];
+                        if (listItem.classList.contains('menu-item')) { // Sadece menü öğelerini işle
+                            const itemId = listItem.getAttribute('data-id');
+                            itemsData.push({
+                                id: parseInt(itemId, 10),
+                                parent_id: parentId,
+                                item_order: i
+                            });
+                            // İç içe geçmiş UL varsa onu da parse et
+                            const nestedList = listItem.querySelector('.nested-sortable');
+                            if (nestedList) {
+                                parseList(nestedList, parseInt(itemId, 10));
+                            }
+                        }
+                    }
+                }
+
+                parseList(menuList.querySelector('.nested-sortable')); // İlk UL'den başla
+
+                // AJAX isteği ile sunucuya gönder
+                fetch(`/admin/menus/items/<%= menu.id %>/update-order`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // CSRF token eklenmeli (güvenlik için)
+                        // 'X-CSRF-Token': 'YOUR_CSRF_TOKEN'
+                    },
+                    body: JSON.stringify({ items: itemsData })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Menü sırası başarıyla kaydedildi!');
+                        saveOrderBtn.style.display = 'none'; // Butonu gizle
+                    } else {
+                        alert('Hata: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error saving menu order:', error);
+                    alert('Sıra kaydedilirken bir hata oluştu.');
+                })
+                .finally(() => {
+                     saveOrderBtn.disabled = false;
+                     saveOrderBtn.textContent = 'Sırayı Kaydet';
+                });
+            });
+        }
+    });
+</script>
+
+<!-- Basit Kart ve Liste Stilleri (admin-style.css'te varsa gerek yok) -->
+<style>
+    .card { margin-bottom: 1rem; border: 1px solid rgba(0,0,0,.125); border-radius: .25rem; }
+    .card-header { padding: .75rem 1.25rem; margin-bottom: 0; background-color: rgba(0,0,0,.03); border-bottom: 1px solid rgba(0,0,0,.125); }
+    .card-body { padding: 1.25rem; }
+    .list-group { padding-left: 0; margin-bottom: 0; }
+    .list-group-item { position: relative; display: block; padding: .75rem 1.25rem; margin-bottom: -1px; background-color: #fff; border: 1px solid rgba(0,0,0,.125); cursor: move; }
+    .list-group-item:first-child { border-top-left-radius: .25rem; border-top-right-radius: .25rem; }
+    .list-group-item:last-child { margin-bottom: 0; border-bottom-right-radius: .25rem; border-bottom-left-radius: .25rem; }
+    .nested-sortable { min-height: 20px; /* Boşken de alan kaplasın */ background-color: #f8f9fa; margin-top: 5px; margin-left: 20px; list-style-type: none; padding-left: 0;}
+    .nested-sortable .list-group-item { background-color: #e9ecef; }
+    .handle { cursor: grab; }
+    .float-right { float: right; }
+</style>

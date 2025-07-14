@@ -1,0 +1,28 @@
+<!-- views/public/blog-post.ejs -->
+
+
+<div class="container">
+    
+<% if (typeof post !== 'undefined') { %>
+    <article class="blog-post-full">
+        <h1 class="post-title"><%= post.title %></h1>
+        <div class="post-meta">
+             Yazar: <%= post.author_username || 'Bilinmiyor' %> |
+             Kategori: <%= post.category_name || 'Genel' %> |
+             Yayınlanma Tarihi: <%= post.created_at.toLocaleDateString('tr-TR', { year: 'numeric', month: 'long', day: 'numeric' }) %>
+        </div>
+        <div class="post-content">
+
+            <%- post.content %>
+        </div>
+    </article>
+
+    <div class="post-navigation" style="margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee;">
+        <a href="/blog" class="btn">« Tüm Blog Yazıları</a>
+    </div>
+
+<% } else { %>
+    <p>Yazı bulunamadı.</p>
+<% } %>
+
+</div>

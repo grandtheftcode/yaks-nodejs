@@ -1,0 +1,72 @@
+<!-- views/admin/blog/add.ejs -->
+
+<h2>Yeni Blog Yazısı Ekle</h2>
+
+<% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<form action="/admin/blog/add" method="POST" class="blog-form">
+    <div class="form-group">
+        <label for="title">Başlık:</label>
+        <input type="text" class="form-control" id="title" name="title" value="<%= typeof formData !== 'undefined' ? formData.title : '' %>" required>
+        <small class="form-text text-muted">URL (slug) bu başlığan otomatik olarak oluşturulacaktır.</small>
+    </div>
+
+    <div class="form-group">
+        <label for="content">İçerik:</label>
+        <!-- !!! GERÇEK UYGULAMADA BURAYA TINYMCE VEYA BAŞKA BİR WYSIWYG EDİTÖR EKLENMELİ !!! -->
+        <textarea id="summernote"  class="form-control" id="content" name="content" rows="10" required><%= typeof formData !== 'undefined' ? formData.content : '' %></textarea>
+        <!-- Örnek TinyMCE için script eklemesi (TinyMCE kütüphanesi dahil edildikten sonra):
+        <script src="https://cdn.tiny.cloud/1/YOUR_API_KEY/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+          tinymce.init({
+            selector: 'textarea#content',
+            plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+            toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+          });
+        </script>
+        -->
+    </div>
+
+    <div class="form-row"> <!-- Bootstrap grid ile yan yana yerleşim -->
+         <div class="form-group col-md-6">
+            <label for="category_id">Kategori:</label>
+            <select class="form-control" id="category_id" name="category_id">
+                <option value="">-- Kategori Seç (İsteğe Bağlı) --</option>
+                <% if (typeof categories !== 'undefined') { %>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category.id %>" <%= typeof formData !== 'undefined' && formData.category_id == category.id ? 'selected' : '' %>>
+                            <%= category.name %>
+                        </option>
+                    <% }); %>
+                <% } %>
+            </select>
+        </div>
+
+        <div class="form-group col-md-6">
+            <label for="status">Durum:</label>
+            <select class="form-control" id="status" name="status" required>
+                <option value="draft" <%= typeof formData === 'undefined' || (formData && formData.status === 'draft') ? 'selected' : '' %>>draft</option>
+                <option value="published" <%= typeof formData !== 'undefined' && formData.status === 'published' ? 'selected' : '' %>>Yayınlanmış</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Öne Çıkan Görsel Yükleme (Multer vb. eklendikten sonra) -->
+    <!--
+    <div class="form-group">
+        <label for="featured_image">Öne Çıkan Görsel:</label>
+        <input type="file" class="form-control-file" id="featured_image" name="featured_image">
+    </div>
+    -->
+
+    <button type="submit" class="btn btn-primary">Yazı Ekle</button>
+    <a href="/admin/blog" class="btn btn-secondary">İptal</a>
+</form>
+
+<!-- Bootstrap grid için CSS gerekebilir (admin-style.css içinde varsa) -->
+<style>
+    .form-row { display: flex; flex-wrap: wrap; margin-right: -5px; margin-left: -5px; }
+    .form-row > .col-md-6 { position: relative; width: 100%; padding-right: 5px; padding-left: 5px; flex: 0 0 50%; max-width: 50%; }
+</style>

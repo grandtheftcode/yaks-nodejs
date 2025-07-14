@@ -1,0 +1,59 @@
+<!-- views/admin/carousel/edit.ejs -->
+
+<% if (typeof slide !== 'undefined') { %>
+    <h2>Carousel Slaytını Düzenle</h2>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+        <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+
+    <!-- Dosya yükleme için enctype GEREKLİ -->
+    <form action="/admin/carousel/edit/<%= slide.id %>" method="POST" enctype="multipart/form-data">
+         <div class="form-group">
+            <label>Mevcut Görsel:</label><br>
+            <img src="<%= slide.image_path %>?t=<%= Date.now() %>" alt="Mevcut Görsel" class="img-thumbnail mb-2" style="max-height: 100px;">
+         </div>
+         <div class="form-group">
+            <label for="image_path">Görseli Değiştir (İsteğe Bağlı):</label>
+            <input type="file" class="form-control-file" id="image_path" name="image_path" accept="image/*">
+             <small class="form-text text-muted">Yeni görsel yüklerseniz mevcut olan silinir.</small>
+        </div>
+         <div class="form-group">
+            <label for="title">Başlık:</label>
+            <input type="text" class="form-control" id="title" name="title" value="<%= slide.title || '' %>">
+        </div>
+        <div class="form-group">
+            <label for="caption">Açıklama:</label>
+            <textarea class="form-control" id="caption" name="caption" rows="3"><%= slide.caption || '' %></textarea>
+        </div>
+        <div class="form-group">
+            <label for="link_url">Link URL:</label>
+            <input type="url" class="form-control" id="link_url" name="link_url" value="<%= slide.link_url || '' %>">
+        </div>
+         <div class="form-group">
+            <label for="link_target">Link Hedefi:</label>
+            <select class="form-control" id="link_target" name="link_target">
+                <option value="_self" <%= slide.link_target === '_self' ? 'selected' : '' %>>Aynı Pencere (_self)</option>
+                <option value="_blank" <%= slide.link_target === '_blank' ? 'selected' : '' %>>Yeni Pencere (_blank)</option>
+            </select>
+        </div>
+         <div class="form-group">
+            <label for="status">Durum:</label>
+            <select class="form-control" id="status" name="status">
+                <option value="published" <%= slide.status === 'published' ? 'selected' : '' %>>Yayınlanmış</option>
+                <option value="draft" <%= slide.status === 'draft' ? 'selected' : '' %>>Taslak</option>
+            </select>
+        </div>
+        <!-- Sıralama (slide_order) genellikle buradan değil, ana yönetim sayfasından yapılır -->
+
+        <button type="submit" class="btn btn-primary">Güncelle</button>
+        <a href="/admin/carousel" class="btn btn-secondary">İptal</a>
+    </form>
+
+<% } else { %>
+    <div class="alert alert-warning">Slayt bilgileri yüklenemedi.</div>
+    <a href="/admin/carousel" class="btn btn-secondary">Carousel Yönetimine Dön</a>
+<% } %>
+
+<!-- Basit Form Stilleri -->
+ <style>.form-group{margin-bottom:1rem}.form-control{display:block;width:100%;padding:.375rem .75rem;font-size:1rem;line-height:1.5;color:#495057;background-color:#fff;background-clip:padding-box;border:1px solid #ced4da;border-radius:.25rem;box-sizing:border-box}.form-control-file{display:block;width:100%}.img-thumbnail{padding:.25rem;background-color:#fff;border:1px solid #dee2e6;border-radius:.25rem;max-width:100%;height:auto}.mb-2{margin-bottom:.5rem!important}label{display:inline-block;margin-bottom:.5rem;font-weight:700}.btn{display:inline-block;font-weight:400;text-align:center;vertical-align:middle;cursor:pointer;-webkit-user-select:none;user-select:none;background-color:transparent;border:1px solid transparent;padding:.375rem .75rem;font-size:1rem;line-height:1.5;border-radius:.25rem;text-decoration:none}.btn-primary{color:#fff;background-color:#007bff;border-color:#007bff}.btn-secondary{color:#fff;background-color:#6c757d;border-color:#6c757d}</style>

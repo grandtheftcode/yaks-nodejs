@@ -1,0 +1,30 @@
+<!-- views/404.ejs -->
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Site ayarlarından başlığı almayı deneyebiliriz ama hata sayfasında garanti değil -->
+    <title>500 - Sayfa Bulunamadı</title>
+    <link rel="stylesheet" href="/css/public-style.css"> <!-- Veya /css/style.css -->
+    <style>
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; text-align: center; flex-direction: column; background-color: #f8f9fa; }
+        .notfound-container { padding: 2rem 3rem; background-color: #fff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .notfound-container h1 { font-size: 6rem; margin: 0; color: #dc3545; /* Kırmızı */ }
+        .notfound-container h2 { font-size: 1.5rem; margin-top: 0; margin-bottom: 1rem; color: #6c757d; /* Gri */ }
+        .notfound-container p { margin-bottom: 1.5rem; color: #343a40; }
+        .notfound-container a { display: inline-block; padding: 10px 20px; background-color: var(--primary-color, #007bff); color: white; text-decoration: none; border-radius: 5px; transition: background-color 0.2s; }
+        .notfound-container a:hover { background-color: #0056b3; }
+    </style>
+</head>
+<body>
+    <div class="notfound-container">
+        <h1>500</h1>
+        <h2>Oops! Sunucu Çöktü</h2>
+        <p>Aradığınız sayfada sorun var lütfen daha sonra tekrar deneyin.</p>
+        <!-- <a href="/">Ana Sayfaya Dön</a>
+        <Veya bir önceki sayfaya dön butonu -->
+        <!-- <a href="javascript:history.back()">Geri Dön</a> -->
+    </div>
+</body>
+</html>

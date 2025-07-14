@@ -1,0 +1,38 @@
+
+<h2>Tüm Temalar</h2>
+
+<% if (themes.length > 0) { %>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Orijinal Ad</th>
+                <th>Depolanan Dosya Adı</th>
+                <th>Yükleme Yolu</th>
+                <th>Yüklenme Tarihi</th>
+                <th>İşlemler</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% themes.forEach(theme => { %>
+                <tr>
+                    <td><%= theme.id %></td>
+                    <td><%= theme.original_name %></td>
+                    <td><%= theme.stored_filename %></td>
+                    <td><%= theme.upload_path %></td>
+                    <td><%= theme.uploaded_at ? new Date(theme.uploaded_at).toLocaleString('tr-TR') : '-' %></td>
+                    <td>
+                        <a href="/admin/themes/edit/<%= theme.id %>">Düzenle</a> |
+                        <form action="/admin/themes/delete/<%= theme.id %>/" method="POST" style="display: inline;" onsubmit="return confirm('Bu temayı silmek istediğinizden emin misiniz?');">
+                            <button type="submit">Sil</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+<% } else { %>
+    <p>Gösterilecek tema bulunamadı.</p>
+<% } %>
+
+<p><a href="/admin/themes/add">Yeni Tema Ekle</a></p>

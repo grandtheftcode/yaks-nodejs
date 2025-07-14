@@ -1,0 +1,83 @@
+<!-- views/public/blog-list.ejs -->
+<!-- views/public/page.ejs -->
+<div class="container">
+
+
+    <div class="row">
+        <div class="col col-xs-12">
+            <ol class="breadcrumb">
+                <li><a href="/">Ana Sayfa</a></li>
+                <li>Blog</li>
+            </ol>
+        </div>
+    </div> <!-- end row -->
+</div>
+<div class="container">
+
+<% if (typeof posts !== 'undefined' && posts.length > 0) { %>
+    <div class="news-grids">
+        <% posts.forEach(post => { %>
+            <div class="grid">
+                <div class="entry-details">
+                    <div class="entry-meta">
+                        <ul>
+                            <li><i class="fa fa-clock-o"></i><%= post.created_at.toLocaleDateString('tr-TR') %></li>
+                            <li><i class="fa fa-comments"></i><a href="/blog/<%= post.slug %>"><%= post.category_name || 'Genel' %></a></li>
+                        </ul>
+                    </div>
+                    <div class="entry-body">
+                        <h3><a href="/blog/<%= post.slug %>"><%= post.title %></a></h3>
+                        <a href="/blog/<%= post.slug %>" class="read-more">Devamını Oku »</a>
+                    </div>
+                </div>
+            </div>
+
+
+            
+        <% }); %>
+    </div>
+    <div style="padding:50px ; height:100px;"> </div>
+    <!-- Sayfalama Navigasyonu (blog/list.ejs'deki gibi) -->
+    <% if (totalPages > 1) { %>
+        <nav aria-label="Page navigation" class="blog-pagination" style="margin-top: 20px;">
+            <ul class="pagination">
+                <li class="page-item <%= currentPage === 1 ? 'disabled' : '' %>">
+                    <a class="page-link" href="/blog?page=<%= currentPage - 1 %>">« Önceki</a>
+                </li>
+                <%
+                    // Sayfa numaralarını gösterirken mantık eklenebilir (örn: ilk, son, aradakiler)
+                    const maxPagesToShow = 5;
+                    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+                    let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+                    if (endPage - startPage + 1 < maxPagesToShow) {
+                        startPage = Math.max(1, endPage - maxPagesToShow + 1);
+                    }
+                %>
+                <% if (startPage > 1) { %>
+                     <li class="page-item"><a class="page-link" href="/blog?page=1">1</a></li>
+                     <% if (startPage > 2) { %><li class="page-item disabled"><span class="page-link">...</span></li><% } %>
+                <% } %>
+                <% for (let i = startPage; i <= endPage; i++) { %>
+                    <li class="page-item <%= i === currentPage ? 'active' : '' %>">
+                        <a class="page-link" href="/blog?page=<%= i %>"><%= i %></a>
+                    </li>
+                <% } %>
+                 <% if (endPage < totalPages) { %>
+                     <% if (endPage < totalPages - 1) { %><li class="page-item disabled"><span class="page-link">...</span></li><% } %>
+                     <li class="page-item"><a class="page-link" href="/blog?page=<%= totalPages %>"><%= totalPages %></a></li>
+                <% } %>
+                <li class="page-item <%= currentPage === totalPages ? 'disabled' : '' %>">
+                    <a class="page-link" href="/blog?page=<%= currentPage + 1 %>">Sonraki »</a>
+                </li>
+            </ul>
+        </nav>
+        <!-- Sayfalama CSS'i (blog/list.ejs'deki gibi) -->
+        <style> .pagination{display:flex;padding-left:0;list-style:none;border-radius:.25rem}.page-item.disabled .page-link{color:#6c757d;pointer-events:none;cursor:auto;background-color:#fff;border-color:#dee2e6}.page-item.active .page-link{z-index:1;color:#fff;background-color:var(--primary-color,#007bff);border-color:var(--primary-color,#007bff)}.page-link{position:relative;display:block;padding:.5rem .75rem;margin-left:-1px;line-height:1.25;color:var(--primary-color,#007bff);background-color:#fff;border:1px solid #dee2e6}.page-link:hover{z-index:2;color:#0056b3;text-decoration:none;background-color:#e9ecef;border-color:#dee2e6} </style>
+    <% } %>
+    <!-- /Sayfalama Navigasyonu -->
+
+<% } else { %>
+    <p>Gösterilecek blog yazısı bulunamadı.</p>
+<% } %>
+
+</div>
