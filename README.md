@@ -43,7 +43,7 @@ cd yaks-nodejs
 ```
 yazarak proje çekilir ve proje içindeki sql mysql sunucusuna çekilir
 
-knexfile.js düzenlenerek veritabanınızın bilgileri ile değiştirilir
+.env düzenlenerek veritabanınızın bilgileri ile değiştirilir
 
 Daha Sonra
 
