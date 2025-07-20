@@ -6,6 +6,8 @@ const vhost = require('vhost');
 const expressLayouts = require('express-ejs-layouts');
 // YENİ Importlar:
 const session = require('express-session');
+const KnexSessionStore = require('connect-session-knex')(session); // ✅ Artık çalışır
+const knex = require('./config/database');
 const passport = require('passport');
 const flash = require('connect-flash');
 require('./config/passport')(passport); 
@@ -48,13 +50,27 @@ app.use(express.urlencoded({ extended: true }));
 // Gelen isteklerdeki JSON veriyi parse etmek için (API'ler için kullanışlı)
 app.use(express.json());
 
-// --- Oturum (Session) Middleware ---
+
+
+// Store'u factory fonksiyon gibi çağırıyoruz
+const store = new KnexSessionStore({
+  knex,
+  tablename: 'sessions',
+  createtable: true,
+  clearInterval: 1000 * 60 * 60
+});
+
+
+// Session middleware
 app.use(session({
-    secret: process.env.SESSION_SECRET || 'klavyekedisi_cok_gizli_anahtar', // .env dosyasından alınmalı veya güvenli bir secret olmalı
-    resave: false, // Oturum değişmediyse tekrar kaydetme
-    saveUninitialized: false, // Başlangıçta boş oturum kaydetme
-    // cookie: { secure: process.env.NODE_ENV === 'production' } // Production'da HTTPS için true olmalı
-    // Production için önerilen: connect-mongo, connect-redis gibi bir session store kullanmak
+  secret: 'drtfjsoiswejpgf',
+  resave: false,
+  saveUninitialized: false,
+  store: store,
+  cookie: {
+    maxAge: 1000 * 60 * 60, // 1 saatlik ömür
+    secure: false           // HTTPS kullanıyorsan true yap
+  }
 }));
 
 // --- Passport Middleware ---
