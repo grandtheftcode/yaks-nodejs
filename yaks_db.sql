@@ -27,6 +27,7 @@ SET time_zone = "+00:00";
 -- Tablo için tablo yapısı `blog_posts`
 --
 
+
 CREATE TABLE `blog_posts` (
   `id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
@@ -180,6 +181,18 @@ CREATE TABLE `products` (
 -- --------------------------------------------------------
 
 --
+-- Tablo için tablo yapısı `sessions`
+--
+
+CREATE TABLE `sessions` (
+  `sid` varchar(255) NOT NULL,
+  `sess` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`sess`)),
+  `expired` timestamp(6) NOT NULL DEFAULT current_timestamp(6) ON UPDATE current_timestamp(6)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Tablo için tablo yapısı `settings`
 --
 
@@ -202,7 +215,7 @@ INSERT INTO `settings` (`setting_key`, `setting_value`, `description`, `input_ty
 ('footer_text', '© 2025 Tüm Hakları Saklıdır.', 'Site alt bilgisinde görünecek metin (HTML olabilir)', 'textarea', '2025-04-13 12:49:53'),
 ('footer_textarea', 'Türkiyenin Dijital Kalbi', 'alt kısım için açıklama metni', 'textarea', '2025-05-18 16:48:23'),
 ('site_description', 'Türkiyenin Dijital Kalbi', 'Arama motorları için sitenin kısa açıklaması', 'textarea', '2025-05-18 16:02:40'),
-('site_logo', '/uploads/settings/site_logo-1747585371869-99411583.png', 'Sitenin logosu (URL veya dosya yolu)', 'file', '2025-05-18 16:22:51'),
+('site_logo', '/uploads/settings/site_logo-1752507801934-803903975.png', 'Sitenin logosu (URL veya dosya yolu)', 'file', '2025-07-14 15:43:21'),
 ('site_title', 'Yaks CMS', 'Sitenin Başlığı', 'text', '2025-05-18 16:48:23'),
 ('teklif_link', 'https://www.r10.net/profil/186516-yusufcansever.html', 'teklif link', 'text', '2025-05-18 16:26:40'),
 ('telephone', '0 543 451 82 48', 'Telefon', 'text', '2025-04-18 08:30:05'),
@@ -289,6 +302,12 @@ ALTER TABLE `products`
   ADD UNIQUE KEY `slug` (`slug`),
   ADD UNIQUE KEY `sku` (`sku`),
   ADD KEY `category_id` (`category_id`);
+
+--
+-- Tablo için indeksler `sessions`
+--
+ALTER TABLE `sessions`
+  ADD PRIMARY KEY (`sid`);
 
 --
 -- Tablo için indeksler `settings`
