@@ -28,7 +28,7 @@ YAKS CMS (Yusuf Akıllı Kolay Site), modern web siteleri için tasarlanmış, k
 ## 🛠️ Kullanılan Teknolojiler
 
 - **Sunucu:** Node.js + Express.js  
-- **Veritabanı:** MongoDB + Mongoose  
+- **Veritabanı:** Mysql / Knex
 - **Editör:** Summernote  
 - **Şablonlama:** EJS  
 - **Kimlik Doğrulama:** Passport.js / JWT
