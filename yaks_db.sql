@@ -129,8 +129,8 @@ CREATE TABLE `menu_items` (
 
 INSERT INTO `menu_items` (`id`, `menu_id`, `title`, `url`, `target`, `parent_id`, `item_order`, `created_at`, `updated_at`) VALUES
 (1, 1, 'Ana Sayfa', '/', '_self', NULL, 0, '2025-04-11 08:30:47', '2025-05-18 16:51:11'),
-(8, 3, 'fa-youtube', 'https://www.youtube.com/@KlavyeGangsteri', '_self', NULL, 0, '2025-04-14 07:49:14', '2025-05-18 16:27:37'),
-(9, 3, 'fa-instagram', 'https://www.instagram.com/cudazihin/', '_self', NULL, 0, '2025-04-14 08:07:51', '2025-04-18 08:48:32');
+(8, 3, 'fa-youtube', 'https://www.youtube.com/@HileliZihin', '_self', NULL, 0, '2025-04-14 07:49:14', '2025-05-18 16:27:37'),
+(9, 3, 'fa-github', 'https://www.github.com/grandtheftcode', '_self', NULL, 0, '2025-04-14 08:07:51', '2025-04-18 08:48:32');
 
 -- --------------------------------------------------------
 
