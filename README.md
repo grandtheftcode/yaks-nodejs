@@ -34,36 +34,21 @@ YAKS CMS (Yusuf Akıllı Kolay Site), modern web siteleri için tasarlanmış, k
 - **Kimlik Doğrulama:** Passport.js / JWT
 
 ## ⚙️ Kurulum
+eger sanal sunucu kullanıyorsanız 
 
-İlk baş 
+İlk baş
+
+makineye docket kurulur
+
+sonrasında 
 
 ```bash
-git clone https://github.com/grandtheftcode/yaks-nodejs.git
-cd yaks-nodejs
-```
-yazarak proje çekilir ve proje içindeki sql mysql sunucusuna çekilir
-
-.env düzenlenerek veritabanınızın bilgileri ile değiştirilir
-
-Daha Sonra
+wget https://raw.githubusercontent.com/grandtheftcode/yaks-installer/refs/heads/main/yaks-installer-docker.sh && chmod 777 yaks-installer-docker.sh && ./yaks-installer-docker.sh
 
 ```
-npm install
-npm start
-```
+yazarak kurulum başlatılır ve kurulum adimlari takip edilerek veritabani ve kullanici bilgileri ayarlanilir ardindan yukleme otomatik olarak kurulur.
 
-
-
-komutları kullanılarak proje aktif edilir
-
-Varsayılan olarak: [http://localhost:3000/login](http://localhost:3000/login)
-kullanıcı adı ve şifre
-```
-
-ilk@user.com
-RuhiÇenet123
-```
-kullanıcı yönetiminden yeni hesap oluşturup eski kullanıcıyı siliniz
+eger cpanel kullanıyorsaniz manuel kurulum yapabilirsiniz yakinda otomatik php kurulum scipti yayinda olacaktır (yazilimlin kullanilmasi için hala nodejs desteginin cpanelde olmasi gerekmektedir. docker desteginin olmasina gerek yoktur docker sadece vdste full stack kurulum icin tam uyumluluk saglamasi icin gereklidir cpanel uyumluluk altyapisi yazilimimiz icin uygundur)
 ## 🛤️ Yol Haritası
 
 - [x] Summernote destekli içerik düzenleme
